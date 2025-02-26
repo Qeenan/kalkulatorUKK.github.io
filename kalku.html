@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator</title>
+    <link rel="icon" href="img/kalku.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(70, 66, 66);
+        }
+
+        .calculator {
+            scale: 1.3;
+            width: 255px;
+            border: 1px solid black;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #1E1E1E;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="text"] {
+            font-size: 40px;
+            text-align: right;
+            width: 90%;     
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #1E1E1E;  
+            border-radius: 5px;
+            color: white;
+            background-color: black;
+        }
+
+        button {
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            background-color: #1E1E1E;
+            transition: background-color 0.2s;
+        }
+
+        button.sd {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        button.clear{
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        button.op{
+            color: #4caf50;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <br>
+        <br>
+        <button class="clear" onclick="hapusLayar('')">C</button>
+        <button class="op" onclick="persen('%')">%</button>
+        <button class="op" onclick="backspace('')">DEL</button>
+        <button class="op" onclick="appendToDisplay('/')">/</button>
+        <br>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button class="op" onclick="appendToDisplay('*')">*</button>
+        <br>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button class="op" onclick="appendToDisplay('-')">-</button>
+        <br>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button class="op" onclick="appendToDisplay('+')">+</button>
+        <br>
+        <button onclick="appendToDisplay('00')">00</button>
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="appendToDisplay('.')">.</button>
+        <button class="sd" onclick="kalkulasi()">=</button>
+    </div>
+</body>
+<script>
+    // MENGETIK MENGGUNAKAN KEYBOARD
+    document.addEventListener("keydown", function(event) {
+        const key = event.key; 
+        const display = document.getElementById("display");
+
+        if (!isNaN(key) || ['+', '-', '*', '/', '.'].includes(key)) {
+            appendToDisplay(key);
+        }
+
+        if (key === "Enter") {
+            kalkulasi();
+        }
+
+        if (key === "Backspace") {
+            backspace();
+        }
+
+        if (key === "Escape") {
+            hapusLayar();
+        }
+    });
+
+    // MENAMBAHKAN ANGKA KE LAYAR
+    function appendToDisplay(value) {
+        const display = document.getElementById("display");
+        display.value += value;
+    }
+
+    // MENGKALKULASI EKSPRESI MATEMATIKA
+    function kalkulasi() {
+    const display = document.getElementById("display");
+    try {
+        // MENGEVALUASI EKSPRESI MATEMATIKA
+        const result = new Function('return ' + display.value)();
+        console.log(result);
+        
+        // MEMERIKSA APAKAH HASILNYA ADALAH NaN ATAU Infinty
+        if (isNaN(result) || !isFinite(result)) {
+            throw new Error("Hasil tidak valid");
+        }
+
+        // MENAMPILKAN HASIL
+        display.value = result;
+    } catch (error) {
+        display.value = "";
+        alert("Kesalahan: " + error.message);
+        console.error("Kesalahan saat menghitung:", error);
+    }
+}
+
+    // MENGHAPUS LAYAR
+    function hapusLayar() {
+        document.getElementById("display").value = "";
+    }
+
+    // MENGHAPUS KARAKTER TERAKHIR
+    function backspace() {
+        const display = document.getElementById("display");
+        display.value = display.value.slice(0, -1);
+    }
+
+    // MENGHITUNG PERSEN
+    function persen() { 
+        const display = document.getElementById("display");
+        try {
+            display.value = new Function('return ' + display.value)() / 100;
+        } catch (error) {
+            display.value = "Error";
+            console.error("Kesalahan saat menghitung:", error);
+        }
+    }
+
+</script>
+</html>
